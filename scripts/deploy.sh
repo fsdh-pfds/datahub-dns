@@ -31,6 +31,10 @@ az storage container create \
   --account-name "$STORAGE_ACCOUNT" \
   --public-access off
 
+# Retrieve subscription and tenant IDs from the current Azure account
+SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+TENANT_ID=$(az account show --query tenantId -o tsv)
+
 echo "Deployment complete: Resource group, storage account, and container have been created."
 
 # Output JSON configuration for ADO pipelines
@@ -40,7 +44,9 @@ JSON_OUTPUT=$(cat <<EOF
   "location": "$LOCATION",
   "storage_account_name": "$STORAGE_ACCOUNT",
   "container_name": "$CONTAINER_NAME",
-  "backend_key": "terraform.tfstate"
+  "backend_key": "datahub-dns.tfstate",
+  "subscription_id": "$SUBSCRIPTION_ID",
+  "tenant_id": "$TENANT_ID"
 }
 EOF
 )
