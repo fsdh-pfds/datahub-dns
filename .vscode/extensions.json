@@ -1,0 +1,15 @@
+{
+    "recommendations": [
+      "tamasfe.even-better-toml",
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "redhat.vscode-yaml",
+      "davidanson.vscode-markdownlint",
+      "editorconfig.editorconfig",
+      "GitHub.vscode-pull-request-github",
+      "mrmlnc.vscode-scss",
+      "streetsidesoftware.code-spell-checker",
+      "taichi.vscode-textlint",
+      "yzhang.markdown-all-in-one"
+    ]
+  }
