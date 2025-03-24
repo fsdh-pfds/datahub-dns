@@ -68,11 +68,15 @@ if [ -z "$LOCATION" ]; then
 fi
 
 if [ -z "$SUBSCRIPTION_ID" ]; then
-  read -p "Enter Subscription ID (leave blank to auto-fetch): " SUBSCRIPTION_ID
+  read -p "Enter Subscription ID (leave blank to use the current subscription): " SUBSCRIPTION_ID
   if [ -z "$SUBSCRIPTION_ID" ]; then
     SUBSCRIPTION_ID=$(az account show --query id -o tsv)
   fi
 fi
+
+# Switch to the desired subscription
+echo "Switching to subscription: $SUBSCRIPTION_ID"
+az account set --subscription "$SUBSCRIPTION_ID"
 
 # Retrieve the tenant ID from the current Azure account
 TENANT_ID=$(az account show --query tenantId -o tsv)

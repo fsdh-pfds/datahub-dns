@@ -40,7 +40,10 @@ You can run the script interactively to be prompted for values, or you can pass 
 
 Run the script with all parameters provided:
 ```bash
-./deploy-backend.sh -g my-dns-rg -a mystorageacct -c mycontainer -l "Canada Central" -u 00000000-0000-0000-0000-000000000000 -k mybackend.tfstate
+./deploy.sh -g my-dns-rg -a mystorageacct -c mycontainer -l "Canada Central" -u 00000000-0000-0000-0000-000000000000 -k dns.tfstate
+
+./deploy.sh -g bainer-dns-rg -a 4563456 -c dns -l "Canada Central" -u bc4bcb08-d617-49f4-b6af-69d6f10c240b -k dns.tfstate
+
 ```
 
 If you omit any parameters, the script will prompt you to enter them.
