@@ -97,7 +97,8 @@ echo "Creating Blob Container '$CONTAINER_NAME' in Storage Account '$STORAGE_ACC
 az storage container create \
   --name "$CONTAINER_NAME" \
   --account-name "$STORAGE_ACCOUNT" \
-  --public-access off
+  --public-access off \
+  --auth-mode login
 
 echo "Deployment complete: Resource group, storage account, and container have been created."
 
