@@ -7,7 +7,7 @@ variable "resource_group_name" {
   type        = string
 }
 
-//make changes below this line 
+//make changes below this line
 
 resource "azurerm_dns_zone" "zone" {
   name                = "bainer.ca"
@@ -29,3 +29,4 @@ resource "azurerm_dns_cname_record" "blog" {
   ttl                 = 3600
   record              = "bainer.github.io"
 }
+
