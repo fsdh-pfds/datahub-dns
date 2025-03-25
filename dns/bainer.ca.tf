@@ -1,7 +1,3 @@
-provider "azurerm" {
-  features {}
-}
-
 variable "resource_group_name" {
   description = "The resource group where the DNS zone is located"
   type        = string
