@@ -22,7 +22,7 @@ provider "azurerm" {
   use_oidc        = true
   client_id       = var.azure_client_id
   tenant_id       = var.azure_tenant_id
-  subscription_id = var.azure gece_subscription_id
+  subscription_id = var.azure_subscription_id  # Fixed typo here
 }
 
 variable "azure_client_id" {
