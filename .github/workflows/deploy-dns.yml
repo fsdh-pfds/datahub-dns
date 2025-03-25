@@ -40,10 +40,7 @@ jobs:
           AZURE_HTTP_USER_AGENT: "GitHubAction"
 
       - name: Install Terraform
-        run: |
-          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-          sudo apt-add-repository "deb https://apt.releases.hashicorp.com ubuntu main"
-          sudo apt-get update && sudo apt-get install terraform
+        uses: hashicorp/setup-terraform@v3
 
       - name: Run Terraform
         run: |
