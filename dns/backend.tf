@@ -18,11 +18,11 @@ terraform {
 provider "azurerm" {
   features {}
 
-  # Rely on OIDC token from azure/login@v2
-  # No need for use_msi here
-  client_id            = "${var.azure_client_id}"
-  tenant_id            = "${var.azure_tenant_id}"
-  subscription_id      = "${var.azure_subscription_id}"
+  # Use OIDC authentication instead of MSI or CLI
+  use_oidc = true
+  client_id = "${var.azure_client_id}"
+  tenant_id = "${var.azure_tenant_id}"
+  subscription_id = "${var.azure_subscription_id}"
 }
 
 variable "azure_client_id" {
