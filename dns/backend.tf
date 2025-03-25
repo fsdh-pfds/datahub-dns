@@ -18,14 +18,13 @@ terraform {
 provider "azurerm" {
   features {}
 
-  # Use Managed Identity with OIDC
-  use_msi              = true
-  client_id            = "${var.azure_client_id}"  # Will come from environment variable or secrets
-  tenant_id            = "${var.azure_tenant_id}"  # Will come from environment variable or secrets
-  subscription_id      = "${var.azure_subscription_id}"  # Will come from environment variable or secrets
+  # Rely on OIDC token from azure/login@v2
+  # No need for use_msi here
+  client_id            = "${var.azure_client_id}"
+  tenant_id            = "${var.azure_tenant_id}"
+  subscription_id      = "${var.azure_subscription_id}"
 }
 
-# Variables to allow passing these values
 variable "azure_client_id" {
   description = "The Client ID of the Managed Identity"
   type        = string
@@ -38,5 +37,10 @@ variable "azure_tenant_id" {
 
 variable "azure_subscription_id" {
   description = "The Subscription ID for the Azure account"
+  type        = string
+}
+
+variable "resource_group_name" {
+  description = "The resource group for the DNS zone and backend"
   type        = string
 }
