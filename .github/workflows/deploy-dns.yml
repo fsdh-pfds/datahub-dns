@@ -25,14 +25,13 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           allow-no-subscriptions: true
 
-
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3
 
       - name: Run Terraform
         run: |
-          echo "Initializing Terraform..."
-          terraform init \
+          echo "Initializing Terraform in dns directory..."
+          terraform -chdir=dns init \
             -backend-config="resource_group_name=${{ secrets.TF_BACKEND_RESOURCE_GROUP }}" \
             -backend-config="storage_account_name=${{ secrets.TF_BACKEND_STORAGE_ACCOUNT }}" \
             -backend-config="container_name=${{ secrets.TF_BACKEND_CONTAINER }}" \
