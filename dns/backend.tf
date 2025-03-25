@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 2.0"
+      version = "~> 3.7"  # Minimum for OIDC support
     }
   }
 
@@ -18,11 +18,11 @@ terraform {
 provider "azurerm" {
   features {}
 
-  # Use OIDC authentication instead of MSI or CLI
-  use_oidc = true
-  client_id = "${var.azure_client_id}"
-  tenant_id = "${var.azure_tenant_id}"
-  subscription_id = "${var.azure_subscription_id}"
+  # OIDC authentication for GitHub Actions
+  use_oidc        = true
+  client_id       = var.azure_client_id
+  tenant_id       = var.azure_tenant_id
+  subscription_id = var.azure gece_subscription_id
 }
 
 variable "azure_client_id" {
