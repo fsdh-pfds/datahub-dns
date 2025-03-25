@@ -31,7 +31,7 @@ jobs:
       - name: Run Terraform
         run: |
           echo "Initializing Terraform in dns directory..."
-          terraform -chdir=dns init -upgrade \
+          terraform -chdir=dns init \
             -backend-config="resource_group_name=${{ secrets.TF_BACKEND_RESOURCE_GROUP }}" \
             -backend-config="storage_account_name=${{ secrets.TF_BACKEND_STORAGE_ACCOUNT }}" \
             -backend-config="container_name=${{ secrets.TF_BACKEND_CONTAINER }}" \
@@ -44,5 +44,10 @@ jobs:
           echo "Applying Terraform changes..."
           terraform -chdir=dns apply -auto-approve
         env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          TF_VAR_azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          TF_VAR_azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          TF_VAR_azure_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           TF_VAR_resource_group_name: ${{ secrets.TF_BACKEND_RESOURCE_GROUP }}
