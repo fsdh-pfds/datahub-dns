@@ -25,17 +25,6 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           allow-no-subscriptions: true
 
-      - name: Download Terraform state from Azure Storage
-        run: |
-          echo "Downloading Terraform state from Azure Storage..."
-          az storage blob download \
-            --account-name ${{ secrets.TF_BACKEND_STORAGE_ACCOUNT }} \
-            --container-name ${{ secrets.TF_BACKEND_CONTAINER }} \
-            --name ${{ secrets.TF_BACKEND_STATE }} \
-            --file ./${{ secrets.TF_BACKEND_STATE }} \
-            --auth-mode login
-        env:
-          AZURE_HTTP_USER_AGENT: "GitHubAction"
 
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3
