@@ -19,3 +19,7 @@ resource "azurerm_dns_cname_record" "bainer_ca-blog" {
   record              = "bainer.github.io"
 }
 
+
+
+
+
