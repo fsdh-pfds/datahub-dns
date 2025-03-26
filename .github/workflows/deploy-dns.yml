@@ -50,8 +50,7 @@ jobs:
             -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
 
           echo "Planning Terraform changes..."
-          terraform plan
+          terraform plan -out=tfplan
 
           echo "Applying Terraform changes..."
-          terraform apply -auto-approve
-
+          terraform apply -auto-approve tfplan
