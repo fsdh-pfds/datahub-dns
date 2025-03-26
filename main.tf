@@ -16,8 +16,9 @@ terraform {
 }
 
 module "dns" {
-  source = "./dns"
+  source              = "./dns"
   resource_group_name = var.resource_group_name
+  # pass other variables as needed
 }
 
 provider "azurerm" {
