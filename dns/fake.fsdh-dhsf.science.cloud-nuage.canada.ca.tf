@@ -1,9 +1,9 @@
-resource "azurerm_dns_zone" "zone" {
+resource "azurerm_dns_zone" "fake_fsdh-dhsf_science_cloud-nuage_canada_ca-zone" {
   name                = "fake.fsdh-dhsf.science.cloud-nuage.canada.ca"
   resource_group_name = var.resource_group_name
 }
 
-resource "azurerm_dns_a_record" "at" {
+resource "azurerm_dns_a_record" "fake_fsdh-dhsf_science_cloud-nuage_canada_ca-a-at" {
   name                = "@"
   zone_name           = azurerm_dns_zone.zone.name
   resource_group_name = var.resource_group_name
@@ -11,7 +11,7 @@ resource "azurerm_dns_a_record" "at" {
   records             = ["20.48.202.171"]
 }
 
-resource "azurerm_dns_a_record" "prd" {
+resource "azurerm_dns_a_record" "fake_fsdh-dhsf_science_cloud-nuage_canada_ca-prd" {
   name                = "prd"
   zone_name           = azurerm_dns_zone.zone.name
   resource_group_name = var.resource_group_name
@@ -19,7 +19,7 @@ resource "azurerm_dns_a_record" "prd" {
   records             = ["20.175.249.169"]
 }
 
-resource "azurerm_dns_a_record" "pre" {
+resource "azurerm_dns_a_record" "fake_fsdh-dhsf_science_cloud-nuage_canada_ca-pre" {
   name                = "pre"
   zone_name           = azurerm_dns_zone.zone.name
   resource_group_name = var.resource_group_name
@@ -28,7 +28,7 @@ resource "azurerm_dns_a_record" "pre" {
 
 }
 
-resource "azurerm_dns_cname_record" "bisjsr_app" {
+resource "azurerm_dns_cname_record" "fake_fsdh-dhsf_science_cloud-nuage_canada_ca-bisjsr_app" {
   name                = "bisjsr-app"
   zone_name           = azurerm_dns_zone.zone.name
   resource_group_name = var.resource_group_name
@@ -36,7 +36,7 @@ resource "azurerm_dns_cname_record" "bisjsr_app" {
   record              = "fsdh-proj-bisjsr-poc.azurewebsites.net"
 }
 
-resource "azurerm_dns_cname_record" "dev" {
+resource "azurerm_dns_cname_record" "fake_fsdh-dhsf_science_cloud-nuage_canada_ca-dev" {
   name                = "dev"
   zone_name           = azurerm_dns_zone.zone.name
   resource_group_name = var.resource_group_name
@@ -44,7 +44,7 @@ resource "azurerm_dns_cname_record" "dev" {
   record              = "fsdh-portal-app-dev.azurewebsites.net"
 }
 
-resource "azurerm_dns_cname_record" "dsw" {
+resource "azurerm_dns_cname_record" "fake_fsdh-dhsf_science_cloud-nuage_canada_ca-dsw" {
   name                = "dsw"
   zone_name           = azurerm_dns_zone.zone.name
   resource_group_name = var.resource_group_name
@@ -52,7 +52,7 @@ resource "azurerm_dns_cname_record" "dsw" {
   record              = "fsdh-dsw-dev.azurewebsites.net"
 }
 
-resource "azurerm_dns_cname_record" "int" {
+resource "azurerm_dns_cname_record" "fake_fsdh-dhsf_science_cloud-nuage_canada_ca-int" {
   name                = "int"
   zone_name           = azurerm_dns_zone.zone.name
   resource_group_name = var.resource_group_name
@@ -60,7 +60,7 @@ resource "azurerm_dns_cname_record" "int" {
   record              = "fsdh-portal-app-int.azurewebsites.net"
 }
 
-resource "azurerm_dns_cname_record" "ncco_app" {
+resource "azurerm_dns_cname_record" "fake_fsdh-dhsf_science_cloud-nuage_canada_ca-ncco_app" {
   name                = "ncco-app"
   zone_name           = azurerm_dns_zone.zone.name
   resource_group_name = var.resource_group_name
@@ -68,7 +68,7 @@ resource "azurerm_dns_cname_record" "ncco_app" {
   record              = "fsdh-proj-ncco-webapp-poc.azurewebsites.net"
 }
 
-resource "azurerm_dns_cname_record" "poc" {
+resource "azurerm_dns_cname_record" "fake_fsdh-dhsf_science_cloud-nuage_canada_ca-poc" {
   name                = "poc"
   zone_name           = azurerm_dns_zone.zone.name
   resource_group_name = var.resource_group_name
@@ -76,7 +76,7 @@ resource "azurerm_dns_cname_record" "poc" {
   record              = "fsdh-portal-app-poc.azurewebsites.net"
 }
 
-resource "azurerm_dns_ns_record" "at" {
+resource "azurerm_dns_ns_record" "fake_fsdh-dhsf_science_cloud-nuage_canada_ca-ns-at" {
   name                = "@"
   zone_name           = azurerm_dns_zone.zone.name
   resource_group_name = var.resource_group_name
