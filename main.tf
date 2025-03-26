@@ -8,11 +8,16 @@ terraform {
 
   backend "azurerm" {
     use_azuread_auth      = true
-    resource_group_name   = "${var.resource_group_name}"
-    storage_account_name  = "${var.storage_account_name}"
-    container_name        = "${var.container_name}"
-    key                   = "${var.backend_state_name}"
+    resource_group_name   = var.resource_group_name
+    storage_account_name  = var.storage_account_name
+    container_name        = var.container_name
+    key                   = var.backend_state_name
   }
+}
+
+module "dns" {
+  source = "./dns"
+  # pass variables as needed
 }
 
 provider "azurerm" {
@@ -22,7 +27,7 @@ provider "azurerm" {
   use_oidc        = true
   client_id       = var.azure_client_id
   tenant_id       = var.azure_tenant_id
-  subscription_id = var.azure_subscription_id  # Fixed typo here
+  subscription_id = var.azure_subscription_id
 }
 
 variable "azure_client_id" {
@@ -42,5 +47,20 @@ variable "azure_subscription_id" {
 
 variable "resource_group_name" {
   description = "The resource group for the DNS zone and backend"
+  type        = string
+}
+
+variable "storage_account_name" {
+  description = "The Storage Account Name for the backend"
+  type        = string
+}
+
+variable "container_name" {
+  description = "The Container Name for the backend"
+  type        = string
+}
+
+variable "backend_state_name" {
+  description = "The name for the backend state file"
   type        = string
 }
