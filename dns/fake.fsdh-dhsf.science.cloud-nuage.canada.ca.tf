@@ -1,3 +1,4 @@
+# fake.fsdh-dhsf.science.cloud-nuage.canada.ca.tf
 resource "azurerm_dns_zone" "fake_fsdh_dhsf_science_cloud_nuage_canada_ca_zone" {
   name                = "fake.fsdh-dhsf.science.cloud-nuage.canada.ca"
   resource_group_name = var.resource_group_name
