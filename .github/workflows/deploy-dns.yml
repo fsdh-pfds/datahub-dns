@@ -1,8 +1,10 @@
-name: Dev Deployment
+name: DNS Deployment
 
 on:
   push:
     branches: ["main"]
+    paths:
+      - '**/*.tf'
 
 permissions:
   id-token: write # Required for OIDC token exchange
