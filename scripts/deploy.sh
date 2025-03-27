@@ -48,27 +48,27 @@ shift $((OPTIND -1))
 
 # Prompt for values if not provided via command-line
 if [ -z "$RESOURCE_GROUP" ]; then
-  read -p "Enter Resource Group Name [dns-resource-group]: " RESOURCE_GROUP
+  read -p -r "Enter Resource Group Name [dns-resource-group]: " RESOURCE_GROUP
   RESOURCE_GROUP=${RESOURCE_GROUP:-dns-resource-group}
 fi
 
 if [ -z "$STORAGE_ACCOUNT" ]; then
-  read -p "Enter Storage Account Name (must be globally unique) [yourtfstatestorage]: " STORAGE_ACCOUNT
+  read -p -r "Enter Storage Account Name (must be globally unique) [yourtfstatestorage]: " STORAGE_ACCOUNT
   STORAGE_ACCOUNT=${STORAGE_ACCOUNT:-yourtfstatestorage}
 fi
 
 if [ -z "$CONTAINER_NAME" ]; then
-  read -p "Enter Blob Container Name [tfstate]: " CONTAINER_NAME
+  read -p -r "Enter Blob Container Name [tfstate]: " CONTAINER_NAME
   CONTAINER_NAME=${CONTAINER_NAME:-tfstate}
 fi
 
 if [ -z "$LOCATION" ]; then
-  read -p "Enter Azure Location [Canada Central]: " LOCATION
+  read -p -r "Enter Azure Location [Canada Central]: " LOCATION
   LOCATION=${LOCATION:-"Canada Central"}
 fi
 
 if [ -z "$SUBSCRIPTION_ID" ]; then
-  read -p "Enter Subscription ID (leave blank to use the current subscription): " SUBSCRIPTION_ID
+  read -p -r "Enter Subscription ID (leave blank to use the current subscription): " SUBSCRIPTION_ID
   if [ -z "$SUBSCRIPTION_ID" ]; then
     SUBSCRIPTION_ID=$(az account show --query id -o tsv)
   fi
