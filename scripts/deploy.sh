@@ -1,7 +1,8 @@
 #!/bin/bash
+# Run this script to deploy the infrastructure needed for the DNS zone management solution.
 
 usage() {
-	echo "Usage: $0 [-g resource_group] [-a storage_account] [-c container_name] [-l location] [-u subscription_id] [-k backend_key]"
+	echo "Usage: $0 [-g resource_group] [-a storage_account] [-c container_name] [-l location] [-u subscription_id] [-k backend_key] [-i managed_identity]"
 	exit 1
 }
 
@@ -12,9 +13,10 @@ CONTAINER_NAME=""
 LOCATION="Canada Central"
 SUBSCRIPTION_ID=""
 BACKEND_KEY="dns.tfstate"
+MANAGED_IDENTITY=""
 
 # Parse command-line arguments
-while getopts ":g:a:c:l:u:k:" opt; do
+while getopts ":g:a:c:l:u:k:i:" opt; do
 	case ${opt} in
 	g)
 		RESOURCE_GROUP=$OPTARG
@@ -33,6 +35,9 @@ while getopts ":g:a:c:l:u:k:" opt; do
 		;;
 	k)
 		BACKEND_KEY=$OPTARG
+		;;
+	i)
+		MANAGED_IDENTITY=$OPTARG
 		;;
 	\?)
 		echo "Invalid option: -$OPTARG" 1>&2
@@ -74,6 +79,11 @@ if [ -z "$SUBSCRIPTION_ID" ]; then
 	fi
 fi
 
+if [ -z "$MANAGED_IDENTITY" ]; then
+	read -p -r "Enter Managed Identity Name [dns-identity]: " MANAGED_IDENTITY
+	MANAGED_IDENTITY=${MANAGED_IDENTITY:-dns-identity}
+fi
+
 # Switch to the desired subscription
 echo "Switching to subscription: $SUBSCRIPTION_ID"
 az account set --subscription "$SUBSCRIPTION_ID"
@@ -100,7 +110,19 @@ az storage container create \
 	--public-access off \
 	--auth-mode login
 
-echo "Deployment complete: Resource group, storage account, and container have been created."
+echo "Creating Managed Identity '$MANAGED_IDENTITY' in Resource Group '$RESOURCE_GROUP'..."
+az identity create --name "$MANAGED_IDENTITY" --resource-group "$RESOURCE_GROUP" --location "$LOCATION" >/dev/null
+MANAGED_IDENTITY_PRINCIPAL=$(az identity show --name "$MANAGED_IDENTITY" --resource-group "$RESOURCE_GROUP" --query "principalId" -o tsv)
+
+echo "Assigning 'Storage Blob Data Contributor' role to Managed Identity on Blob Container..."
+CONTAINER_SCOPE="/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Storage/storageAccounts/$STORAGE_ACCOUNT/blobServices/default/containers/$CONTAINER_NAME"
+az role assignment create --assignee "$MANAGED_IDENTITY_PRINCIPAL" --role "Storage Blob Data Contributor" --scope "$CONTAINER_SCOPE"
+
+echo "Assigning 'DNS Zone Contributor' role to Managed Identity on Resource Group..."
+RG_SCOPE="/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP"
+az role assignment create --assignee "$MANAGED_IDENTITY_PRINCIPAL" --role "DNS Zone Contributor" --scope "$RG_SCOPE"
+
+echo "Deployment complete: Resource group, storage account, container, and managed identity have been created."
 
 # Output JSON configuration for ADO pipelines
 JSON_OUTPUT=$(
@@ -112,7 +134,9 @@ JSON_OUTPUT=$(
   "container_name": "$CONTAINER_NAME",
   "backend_key": "$BACKEND_KEY",
   "subscription_id": "$SUBSCRIPTION_ID",
-  "tenant_id": "$TENANT_ID"
+  "tenant_id": "$TENANT_ID",
+  "managed_identity": "$MANAGED_IDENTITY",
+  "managed_identity_principal": "$MANAGED_IDENTITY_PRINCIPAL"
 }
 EOF
 )
