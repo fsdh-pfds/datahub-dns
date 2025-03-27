@@ -1,12 +1,15 @@
 terraform {
+  required_version = ">= 1.10"
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.7"  # Minimum for OIDC support
+      version = "~> 4.24"
     }
   }
 
   backend "azurerm" {
+    //comment out 'use_azuread_auth' line to run locally
     use_azuread_auth      = true
     resource_group_name   = var.resource_group_name
     storage_account_name  = var.storage_account_name
