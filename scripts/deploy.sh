@@ -16,35 +16,35 @@ BACKEND_KEY="dns.tfstate"
 # Parse command-line arguments
 while getopts ":g:a:c:l:u:k:" opt; do
   case ${opt} in
-    g )
-      RESOURCE_GROUP=$OPTARG
-      ;;
-    a )
-      STORAGE_ACCOUNT=$OPTARG
-      ;;
-    c )
-      CONTAINER_NAME=$OPTARG
-      ;;
-    l )
-      LOCATION=$OPTARG
-      ;;
-    u )
-      SUBSCRIPTION_ID=$OPTARG
-      ;;
-    k )
-      BACKEND_KEY=$OPTARG
-      ;;
-    \? )
-      echo "Invalid option: -$OPTARG" 1>&2
-      usage
-      ;;
-    : )
-      echo "Option -$OPTARG requires an argument." 1>&2
-      usage
-      ;;
+  g)
+    RESOURCE_GROUP=$OPTARG
+    ;;
+  a)
+    STORAGE_ACCOUNT=$OPTARG
+    ;;
+  c)
+    CONTAINER_NAME=$OPTARG
+    ;;
+  l)
+    LOCATION=$OPTARG
+    ;;
+  u)
+    SUBSCRIPTION_ID=$OPTARG
+    ;;
+  k)
+    BACKEND_KEY=$OPTARG
+    ;;
+  \?)
+    echo "Invalid option: -$OPTARG" 1>&2
+    usage
+    ;;
+  :)
+    echo "Option -$OPTARG requires an argument." 1>&2
+    usage
+    ;;
   esac
 done
-shift $((OPTIND -1))
+shift $((OPTIND - 1))
 
 # Prompt for values if not provided via command-line
 if [ -z "$RESOURCE_GROUP" ]; then
@@ -103,7 +103,8 @@ az storage container create \
 echo "Deployment complete: Resource group, storage account, and container have been created."
 
 # Output JSON configuration for ADO pipelines
-JSON_OUTPUT=$(cat <<EOF
+JSON_OUTPUT=$(
+  cat <<EOF
 {
   "resource_group_name": "$RESOURCE_GROUP",
   "location": "$LOCATION",
