@@ -8,6 +8,10 @@ permissions:
   id-token: write  # Required for OIDC token exchange
   contents: read
 
+concurrency:
+  group: terraform-deployment
+  cancel-in-progress: false
+
 jobs:
   build_and_deploy_dev:
     runs-on: ubuntu-latest
