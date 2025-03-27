@@ -5,6 +5,7 @@ This script automates the creation of an Azure Resource Group, Storage Account, 
 ## Overview
 
 The script performs the following tasks:
+
 - Prompts for or accepts via command-line arguments the required parameters:
   - **Resource Group Name**
   - **Storage Account Name** (must be globally unique)
@@ -39,6 +40,7 @@ You can run the script interactively to be prompted for values, or you can pass 
 ### Example
 
 Run the script with all parameters provided:
+
 ```bash
 ./deploy.sh -g my-dns-rg -a mystorageacct -c mycontainer -l "Canada Central" -u 00000000-0000-0000-0000-000000000000 -k dns.tfstate
 
