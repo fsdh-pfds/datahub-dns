@@ -18,71 +18,78 @@ MANAGED_IDENTITY=""
 # Parse command-line arguments
 while getopts ":g:a:c:l:u:k:i:" opt; do
 	case ${opt} in
-	g)
-		RESOURCE_GROUP=$OPTARG
-		;;
-	a)
-		STORAGE_ACCOUNT=$OPTARG
-		;;
-	c)
-		CONTAINER_NAME=$OPTARG
-		;;
-	l)
-		LOCATION=$OPTARG
-		;;
-	u)
-		SUBSCRIPTION_ID=$OPTARG
-		;;
-	k)
-		BACKEND_KEY=$OPTARG
-		;;
-	i)
-		MANAGED_IDENTITY=$OPTARG
-		;;
-	\?)
-		echo "Invalid option: -$OPTARG" 1>&2
-		usage
-		;;
-	:)
-		echo "Option -$OPTARG requires an argument." 1>&2
-		usage
-		;;
+		g)
+			RESOURCE_GROUP=$OPTARG
+			;;
+		a)
+			STORAGE_ACCOUNT=$OPTARG
+			;;
+		c)
+			CONTAINER_NAME=$OPTARG
+			;;
+		l)
+			LOCATION=$OPTARG
+			;;
+		u)
+			SUBSCRIPTION_ID=$OPTARG
+			;;
+		k)
+			BACKEND_KEY=$OPTARG
+			;;
+		i)
+			MANAGED_IDENTITY=$OPTARG
+			;;
+		\?)
+			echo "Invalid option: -$OPTARG" 1>&2
+			usage
+			;;
+		:)
+			echo "Option -$OPTARG requires an argument." 1>&2
+			usage
+			;;
 	esac
 done
 shift $((OPTIND - 1))
 
 # Prompt for values if not provided via command-line
 if [ -z "$RESOURCE_GROUP" ]; then
-	read -p -r "Enter Resource Group Name [dns-resource-group]: " RESOURCE_GROUP
+	echo -n "Enter Resource Group Name [dns-resource-group]: "
+	read -r RESOURCE_GROUP
 	RESOURCE_GROUP=${RESOURCE_GROUP:-dns-resource-group}
 fi
 
 if [ -z "$STORAGE_ACCOUNT" ]; then
-	read -p -r "Enter Storage Account Name (must be globally unique) [yourtfstatestorage]: " STORAGE_ACCOUNT
+	echo -n "Enter Storage Account Name (must be globally unique) [yourtfstatestorage]: "
+	read -r STORAGE_ACCOUNT
 	STORAGE_ACCOUNT=${STORAGE_ACCOUNT:-yourtfstatestorage}
 fi
 
 if [ -z "$CONTAINER_NAME" ]; then
-	read -p -r "Enter Blob Container Name [tfstate]: " CONTAINER_NAME
+	echo -n "Enter Blob Container Name [tfstate]: "
+	read -r CONTAINER_NAME
 	CONTAINER_NAME=${CONTAINER_NAME:-tfstate}
 fi
 
 if [ -z "$LOCATION" ]; then
-	read -p -r "Enter Azure Location [Canada Central]: " LOCATION
+	echo -n "Enter Azure Location [Canada Central]: "
+	read -r LOCATION
 	LOCATION=${LOCATION:-"Canada Central"}
 fi
 
 if [ -z "$SUBSCRIPTION_ID" ]; then
-	read -p -r "Enter Subscription ID (leave blank to use the current subscription): " SUBSCRIPTION_ID
+	echo -n "Enter Subscription ID (leave blank to use the current subscription): "
+	read -r SUBSCRIPTION_ID
 	if [ -z "$SUBSCRIPTION_ID" ]; then
 		SUBSCRIPTION_ID=$(az account show --query id -o tsv)
 	fi
 fi
 
 if [ -z "$MANAGED_IDENTITY" ]; then
-	read -p -r "Enter Managed Identity Name [dns-identity]: " MANAGED_IDENTITY
+	echo -n "Enter Managed Identity Name [dns-identity]: "
+	read -r MANAGED_IDENTITY
 	MANAGED_IDENTITY=${MANAGED_IDENTITY:-dns-identity}
 fi
+
 
 # Switch to the desired subscription
 echo "Switching to subscription: $SUBSCRIPTION_ID"
@@ -111,8 +118,9 @@ az storage container create \
 	--auth-mode login
 
 echo "Creating Managed Identity '$MANAGED_IDENTITY' in Resource Group '$RESOURCE_GROUP'..."
-az identity create --name "$MANAGED_IDENTITY" --resource-group "$RESOURCE_GROUP" --location "$LOCATION" >/dev/null
+az identity create --name "$MANAGED_IDENTITY" --resource-group "$RESOURCE_GROUP" --location "$LOCATION" > /dev/null
 MANAGED_IDENTITY_PRINCIPAL=$(az identity show --name "$MANAGED_IDENTITY" --resource-group "$RESOURCE_GROUP" --query "principalId" -o tsv)
+MANAGED_IDENTITY_CLIENT=$(az identity show --name "$MANAGED_IDENTITY" --resource-group "$RESOURCE_GROUP" --query "clientId" -o tsv)
 
 echo "Assigning 'Storage Blob Data Contributor' role to Managed Identity on Blob Container..."
 CONTAINER_SCOPE="/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Storage/storageAccounts/$STORAGE_ACCOUNT/blobServices/default/containers/$CONTAINER_NAME"
@@ -132,11 +140,12 @@ JSON_OUTPUT=$(
   "location": "$LOCATION",
   "storage_account_name": "$STORAGE_ACCOUNT",
   "container_name": "$CONTAINER_NAME",
-  "backend_key": "$BACKEND_KEY",
+  "backend_state_name": "$BACKEND_KEY",
   "subscription_id": "$SUBSCRIPTION_ID",
   "tenant_id": "$TENANT_ID",
   "managed_identity": "$MANAGED_IDENTITY",
-  "managed_identity_principal": "$MANAGED_IDENTITY_PRINCIPAL"
+  "managed_identity_principal": "$MANAGED_IDENTITY_PRINCIPAL",
+  "managed_identity_client": "$MANAGED_IDENTITY_CLIENT"
 }
 EOF
 )
