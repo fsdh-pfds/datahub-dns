@@ -2,7 +2,7 @@ name: Dev Deployment
 
 on:
   push:
-    branches: ["*"]
+    branches: ["main"]
 
 permissions:
   id-token: write  # Required for OIDC token exchange
