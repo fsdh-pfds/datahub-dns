@@ -5,7 +5,7 @@ on:
     branches: ["main"]
 
 permissions:
-  id-token: write  # Required for OIDC token exchange
+  id-token: write # Required for OIDC token exchange
   contents: read
 
 concurrency:
