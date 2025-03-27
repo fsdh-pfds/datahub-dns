@@ -25,14 +25,17 @@ rule "terraform_naming_convention" {
   enabled = true
 }
 
+// single shared version file is used 
 rule "terraform_required_version" {
   enabled = false
 }
 
+// single shared required providers
 rule "terraform_required_providers" {
   enabled = false
 }
 
+// disabled for simplicity of dns zone structure
 rule "terraform_standard_module_structure" {
   enabled = false
 }

@@ -1,4 +1,4 @@
-//bainer.ca.tf
+# bainer.ca.tf
 resource "azurerm_dns_zone" "bainer_ca_zone" {
   name                = "bainer.ca"
   resource_group_name = var.resource_group_name
