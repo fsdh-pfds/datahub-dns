@@ -24,7 +24,7 @@ jobs:
           fetch-depth: 0
 
       - name: Super-linter
-        uses: super-linter/super-linter@v7.2.0
+        uses: super-linter/super-linter@e1cb86b6e8d119f789513668b4b30bf17fe1efe4 # v7.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # To report GitHub Actions status checks
           VALIDATE_ALL_CODEBASE: false # Lint only changed files
