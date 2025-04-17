@@ -1,6 +1,7 @@
 name: DNS Deployment
 
 on:
+  workflow_dispatch:
   push:
     branches: ["main"]
     paths:
@@ -16,7 +17,8 @@ concurrency:
 
 jobs:
   build_and_deploy_dev:
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
     environment: production
 
     steps:
@@ -42,7 +44,7 @@ jobs:
           TF_VAR_azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
           TF_VAR_azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           TF_VAR_azure_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          TF_VAR_resource_group_name: ${{ secrets.TF_BACKEND_RESOURCE_GROUP }}
+          TF_VAR_resource_group_name: ${{ secrets.TF_DNS_RESOURCE_GROUP }}
           TF_VAR_storage_account_name: ${{ secrets.TF_BACKEND_STORAGE_ACCOUNT }}
           TF_VAR_container_name: ${{ secrets.TF_BACKEND_CONTAINER }}
           TF_VAR_backend_state_name: ${{ secrets.TF_BACKEND_STATE }}
@@ -55,8 +57,8 @@ jobs:
             -backend-config="key=$TF_VAR_backend_state_name" \
             -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
 
-          echo "Planning Terraform changes..."
-          terraform plan -out=tfplan
+          #echo "Planning Terraform changes..."
+          #terraform plan -out=tfplan
 
-          echo "Applying Terraform changes..."
-          terraform apply -auto-approve tfplan
+          #echo "Applying Terraform changes..."
+          #terraform apply -auto-approve tfplan
