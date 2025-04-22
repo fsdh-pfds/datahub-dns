@@ -64,5 +64,5 @@ jobs:
           echo "Planning Terraform changes..."
           terraform plan -out=tfplan
 
-          #echo "Applying Terraform changes..."
-          #terraform apply -auto-approve tfplan
+          echo "Applying Terraform changes..."
+          terraform apply -auto-approve tfplan
