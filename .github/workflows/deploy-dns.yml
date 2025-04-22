@@ -32,6 +32,10 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
 
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3
 
