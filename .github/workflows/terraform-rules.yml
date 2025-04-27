@@ -18,19 +18,13 @@ jobs:
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform Init (skip backend)
-        run: terraform init -backend=false
-
-      - name: Terraform Fmt & Validate
+      - name: Terraform Init, Fmt, Validate & Plan
         run: |
+          terraform init -backend=false
           terraform fmt -recursive -check
           terraform validate -no-color
-
-      - name: Terraform Plan (no refresh)
-        run: terraform plan -refresh=false -out=tfplan
-
-      - name: Export plan JSON
-        run: terraform show -json tfplan > plan.json
+          terraform plan -refresh=false -out=tfplan
+          terraform show -json tfplan > plan.json
 
       - name: Run Terrascan
         uses: tenable/terrascan-action@v1
