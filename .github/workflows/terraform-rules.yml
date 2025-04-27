@@ -34,7 +34,7 @@ jobs:
       # optional: upload results as an artifact for inspection
       - name: Upload Conftest results
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: conftest-results
           path: .conftest
