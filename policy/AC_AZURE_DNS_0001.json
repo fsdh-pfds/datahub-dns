@@ -1,0 +1,12 @@
+{
+  "name": "allowed_dns_resource_types",
+  "file": "AC_AZURE_DNS_0001.rego",
+  "policy_type": "azure",
+  "resource_type": "*",
+  "template_args": {},
+  "severity": "HIGH",
+  "description": "Only azurerm_dns_zone, azurerm_dns_a_record & azurerm_dns_cname_record are permitted",
+  "category": "Resource Management",
+  "version": 1,
+  "id": "AC_AZURE_DNS_0001"
+}
