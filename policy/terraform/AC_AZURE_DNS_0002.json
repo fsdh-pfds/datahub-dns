@@ -1,6 +1,6 @@
 {
   "id": "AC_AZURE_DNS_0002",
-  "version": "1.0",
+  "version": "1",
   "name": "allowed_dns_module_sources",
   "description": "Only modules with source \"./dns\" are permitted",
   "severity": "MEDIUM",
