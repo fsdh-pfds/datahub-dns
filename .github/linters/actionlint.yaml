@@ -1,6 +1,7 @@
 ---
 env: []
-labels:
-  - dns
+self-hosted-runner:
+  labels:
+    - dns
 environments:
   - production
