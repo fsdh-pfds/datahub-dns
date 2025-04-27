@@ -1,15 +1,16 @@
----
 name: Terraform Rules
 
 on:
-  push: {}
+  push:
+    paths:
+      - "**/*.tf"
   pull_request:
     paths:
       - "**/*.tf"
 
 jobs:
   policy-check:
-    name: Conftest Terraform Rules
+    name: Terrascan Policy Check
     runs-on: ubuntu-latest
 
     steps:
@@ -17,24 +18,24 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Terraform
-        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
+        uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform Init & Plan
+      - name: Terraform Init (skip backend)
+        run: terraform init -backend=false
+
+      - name: Terraform Fmt & Validate
         run: |
-          terraform init -backend=false
-          terraform plan -out=tfplan
-          terraform show -json tfplan > plan.json
+          terraform fmt -recursive -check
+          terraform validate -no-color
+
+      - name: Terraform Plan (no refresh)
+        run: terraform plan -refresh=false -out=tfplan
+
+      - name: Export plan JSON
+        run: terraform show -json tfplan > plan.json
 
       - name: Run Terrascan
         uses: tenable/terrascan-action@v1
         with:
           iac_type: "terraform"
           policy_path: "policy"
-
-      # optional: upload results as an artifact for inspection
-      - name: Upload Conftest results
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: conftest-results
-          path: .conftest
