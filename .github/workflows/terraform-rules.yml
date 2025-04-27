@@ -1,0 +1,38 @@
+---
+name: Terraform Rules
+
+on:
+  pull_request:
+    paths:
+      - "**/*.tf"
+
+jobs:
+  policy-check:
+    name: Conftest Terraform Rules
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init & Plan
+        run: |
+          terraform init -backend=false
+          terraform plan -out=tfplan
+          terraform show -json tfplan > plan.json
+
+      - name: Run policy checks with Conftest
+        uses: instrumenta/conftest-action@v2
+        with:
+          args: test plan.json
+
+      # optional: upload results as an artifact for inspection
+      - name: Upload Conftest results
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: conftest-results
+          path: .conftest
