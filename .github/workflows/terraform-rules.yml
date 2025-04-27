@@ -1,9 +1,7 @@
 name: Terraform Rules
 
 on:
-  push:
-    paths:
-      - "**/*.tf"
+  push: {}
   pull_request:
     paths:
       - "**/*.tf"
