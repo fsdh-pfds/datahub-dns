@@ -1,0 +1,13 @@
+{
+  "id": "AC_AZURE_CUSTOM_0002",
+  "version": 1,
+  "name": "dns_zone_must_be_public",
+  "file": "azure_dns_public.rego",
+  "policy_type": "azure",
+  "resource_type": "azurerm_dns_zone",
+  "template_args": {},
+  "severity": "MEDIUM",
+  "category": "Networking",
+  "description": "DNS zones must be public; private zones are disallowed",
+  "references": []
+}

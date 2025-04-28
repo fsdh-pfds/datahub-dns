@@ -1,4 +1,5 @@
-name: Terraform Rules
+# .github/workflows/terraform-rules.yml
+name: IaC Security Scan
 
 on:
   push: {}
@@ -7,19 +8,32 @@ on:
       - "**/*.tf"
 
 jobs:
-  policy-check:
+  terrascan:
     name: Terrascan Policy Check
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Install Terraform
+      - name: Install Terraform (for init/version detection)
         uses: hashicorp/setup-terraform@v3
 
       - name: Run Terrascan
-        uses: tenable/terrascan-action@v1
+        uses: tenable/terrascan-action@v2
         with:
+          # what to scan
           iac_type: "terraform"
-          policy_path: "policy"
+          iac_dir: "."
+          iac_version: "v14" # matches Terraform ≥1.0
+          # use built-in Azure rules (no need for your JSON stub)
+          policy_type: "azure"
+          # if you want your custom Rego policies instead, drop policy_type and:
+          # policy_path: 'policy/terraform'
+          # (but that dir must contain .rego + metadata.json files)
+          sarif_upload: true # surface findings in the Security tab
+
+      - name: Upload SARIF report
+        if: always()
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ steps.terrascan.outputs.sarif }}
