@@ -2,12 +2,19 @@
   "name": "Azure Developer CLI",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:20-bullseye",
   "features": {
-    "ghcr.io/devcontainers/features/azure-cli:1": {},
-    "ghcr.io/devcontainers/features/terraform:1": {},
-    "ghcr.io/azure/azure-dev/azd:latest": {},
-    "ghcr.io/devcontainers/features/go:1": {},
-    "ghcr.io/azure/azure-dev/azd:0": {},
-    "ghcr.io/devcontainers-extra/features/terrascan:1": {}
+    "ghcr.io/devcontainers/features/azure-cli:1": {
+      "version": "latest",
+      "bicepVersion": "latest"
+    },
+    "ghcr.io/devcontainers/features/terraform:1": {
+      "installTFsec": true,
+      "version": "latest",
+      "tflint": "latest",
+      "terragrunt": "latest"
+    },
+    "ghcr.io/devcontainers/features/go:1": {
+      "version": "latest"
+    }
   },
   "customizations": {
     "vscode": {
