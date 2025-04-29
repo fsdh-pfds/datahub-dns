@@ -21,7 +21,7 @@
   },
   "containerEnv": {
     "TFLINT_OPA_POLICY_DIR": "${localWorkspaceFolder}/.tflint.d/policies",
-    "TFLINT_CONFIG_FILE":     "${localWorkspaceFolder}/.tflint.hcl"
+    "TFLINT_CONFIG_FILE": "${localWorkspaceFolder}/.tflint.hcl"
   },
   "customizations": {
     "vscode": {
