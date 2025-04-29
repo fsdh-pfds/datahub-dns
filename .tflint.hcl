@@ -4,6 +4,11 @@ plugin "azurerm" {
     source  = "github.com/terraform-linters/tflint-ruleset-azurerm"
 }
 
+plugin "opa" {
+  enabled = true
+  version = "0.8.0"
+  source  = "github.com/terraform-linters/tflint-ruleset-opa"
+}
 
 rule "terraform_comment_syntax" {
   enabled = true
