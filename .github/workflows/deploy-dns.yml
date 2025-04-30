@@ -1,7 +1,6 @@
 name: DNS Deployment
 
 on:
-  workflow_dispatch:
   push:
     branches: ["main"]
     paths:
@@ -34,7 +33,7 @@ jobs:
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: Install Terraform
         uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3

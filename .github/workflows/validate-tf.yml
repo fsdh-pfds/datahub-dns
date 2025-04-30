@@ -1,0 +1,35 @@
+name: Terraform Validation Checks
+
+on:
+  pull_request:
+    paths:
+      - "**/*.tf"
+
+permissions: read-all
+
+jobs:
+  validate-and-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Init & Validate
+        run: |
+          terraform init -backend=false
+          terraform validate
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+
+      - name: Run TFLint
+        env:
+          TFLINT_OPA_POLICY_DIR: ${{ github.workspace }}/.tflint.d/policies
+          TFLINT_CONFIG_FILE: ${{ github.workspace }}/.tflint.hcl
+        run: |
+          tflint --init
+          TFLINT_OPA_TEST=1 tflint --no-color
+          tflint --recursive --format=compact

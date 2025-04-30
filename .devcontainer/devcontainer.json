@@ -2,11 +2,26 @@
   "name": "Azure Developer CLI",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:22-bullseye",
   "features": {
-    "ghcr.io/devcontainers/features/azure-cli:1": {},
-    "ghcr.io/devcontainers/features/terraform:1": {},
+    "ghcr.io/devcontainers/features/azure-cli:1": {
+      "version": "latest",
+      "bicepVersion": "latest"
+    },
+    "ghcr.io/devcontainers/features/terraform:1": {
+      "version": "latest",
+      "tflint": "latest",
+      "terragrunt": "latest"
+    },
     "ghcr.io/azure/azure-dev/azd:latest": {},
-    "ghcr.io/devcontainers/features/go:1": {},
-    "ghcr.io/azure/azure-dev/azd:0": {}
+    "ghcr.io/devcontainers/features/go:1": {
+      "version": "latest"
+    },
+    "ghcr.io/azure/azure-dev/azd:0": {
+      "version": "stable"
+    }
+  },
+  "containerEnv": {
+    "TFLINT_OPA_POLICY_DIR": "${localWorkspaceFolder}/.tflint.d/policies",
+    "TFLINT_CONFIG_FILE": "${localWorkspaceFolder}/.tflint.hcl"
   },
   "customizations": {
     "vscode": {
