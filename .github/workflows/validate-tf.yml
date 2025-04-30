@@ -23,9 +23,7 @@ jobs:
           terraform validate
 
       - name: Setup TFLint
-        uses: dflook/setup-tflint@v1
-        with:
-          version: latest
+        uses: terraform-linters/setup-tflint@v4
 
       - name: Run TFLint
         run: |
