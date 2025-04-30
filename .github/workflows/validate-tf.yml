@@ -26,6 +26,9 @@ jobs:
         uses: terraform-linters/setup-tflint@v4
 
       - name: Run TFLint
+        env:
+          TFLINT_OPA_POLICY_DIR: ${{ github.workspace }}/.tflint.d/policies
+          TFLINT_CONFIG_FILE: ${{ github.workspace }}/.tflint.hcl
         run: |
           tflint --init
           tflint --recursive
