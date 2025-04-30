@@ -1,6 +1,7 @@
 name: DNS Deployment
 
 on:
+  workflow_dispatch
   push:
     branches: ["main"]
     paths:
