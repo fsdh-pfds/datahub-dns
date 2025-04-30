@@ -19,3 +19,4 @@ resource "azurerm_dns_cname_record" "bainer_ca_blog" {
   ttl                 = 3600
   record              = "bainer.github.io"
 }
+
