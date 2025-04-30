@@ -5,6 +5,8 @@ on:
     paths:
       - "**/*.tf"
 
+permissions: read-all
+
 jobs:
   validate-and-lint:
     runs-on: ubuntu-latest
