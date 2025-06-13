@@ -18,7 +18,8 @@ concurrency:
 jobs:
   build_and_deploy:
     runs-on:
-      - dns
+      group: "Prod FSDH Hosted Runners"
+      labels: [self-hosted, linux, dns]
     environment: production
 
     steps:
