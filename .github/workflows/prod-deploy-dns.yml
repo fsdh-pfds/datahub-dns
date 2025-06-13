@@ -60,6 +60,8 @@ jobs:
             -backend-config="key=$TF_VAR_backend_state_name" \
             -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
 
+          terraform force-unlock -force 071b245c-066c-95f8-b2c9-db59a31efe1f
+          
           echo "Planning Terraform changes..."
           terraform plan -out=tfplan
 
