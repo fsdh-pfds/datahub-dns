@@ -41,6 +41,12 @@ jobs:
       - name: Install Terraform
         uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
 
+
+      - name: Force-unlock Terraform state (if stale)
+        run: terraform force-unlock 071b245c-066c-95f8-b2c9-db59a31efe1f
+        continue-on-error: true
+
+
       - name: Run Terraform
         env:
           TF_VAR_azure_client_id: ${{ secrets.AZ_APPLICATION_ID }}
