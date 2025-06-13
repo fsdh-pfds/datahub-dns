@@ -1,6 +1,7 @@
-name: DNS Deployment
+name: Production DNS Deployment
 
 on:
+  workflow_dispatch:
   push:
     branches: ["main"]
     paths:
@@ -15,7 +16,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build_and_deploy_dev:
+  build_and_deploy:
     runs-on:
       - dns
     environment: production
@@ -27,9 +28,9 @@ jobs:
       - name: Login to Azure (OIDC)
         uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5 # v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          client-id: ${{ env.SUB_ID }}
+          tenant-id: ${{ env.TENANT }}
+          subscription-id: ${{ env.SUB_ID }}
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
@@ -41,12 +42,6 @@ jobs:
       - name: Run Terraform
         env:
           # Set environment variables from GitHub secrets
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          TF_VAR_azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
-          TF_VAR_azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-          TF_VAR_azure_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           TF_VAR_resource_group_name: ${{ secrets.TF_DNS_RESOURCE_GROUP }}
           TF_VAR_storage_account_name: ${{ secrets.TF_BACKEND_STORAGE_ACCOUNT }}
           TF_VAR_container_name: ${{ secrets.TF_BACKEND_CONTAINER }}
@@ -64,4 +59,4 @@ jobs:
           terraform plan -out=tfplan
 
           echo "Applying Terraform changes..."
-          terraform apply -auto-approve tfplan
+          #terraform apply -auto-approve tfplan
