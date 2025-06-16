@@ -42,22 +42,13 @@ jobs:
 
       - name: Terraform plan
         uses: cds-snc/terraform-plan@e710cb1446e5dfe69a0182603fb06b5282d7eb07 # v3.4.3
-        env:
-          TF_VAR_azure_client_id: ${{ secrets.AZ_APPLICATION_ID }}
-          TF_VAR_azure_tenant_id: ${{ secrets.AZ_TENANT_ID }}
-          TF_VAR_azure_subscription_id: ${{ secrets.AZ_SUBSCRIPTION_ID }}
-          
-          TF_VAR_resource_group_name: "inspect"
-          TF_VAR_storage_account_name: ${{ secrets.TF_BACKEND_STORAGE_ACCOUNT }}
-          TF_VAR_container_name: ${{ secrets.TF_BACKEND_CONTAINER }}
-          TF_VAR_backend_state_name: ${{ secrets.TF_BACKEND_STATE }}
         with:
           terraform-init: |
-            -backend-config="resource_group_name=$TF_VAR_resource_group_name" \
-            -backend-config="storage_account_name=$TF_VAR_storage_account_name" \
-            -backend-config="container_name=$TF_VAR_container_name" \
-            -backend-config="key=$TF_VAR_backend_state_name" \
-            -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
+            -backend-config="resource_group_name=${{ secrets.TF_DNS_RESOURCE_GROUP }}"
+            -backend-config="storage_account_name=${{ secrets.TF_BACKEND_STORAGE_ACCOUNT }}"
+            -backend-config="container_name=${{ secrets.TF_BACKEND_CONTAINER }}"
+            -backend-config="key=${{ secrets.TF_BACKEND_STATE }}"
+            -backend-config="subscription_id=${{ secrets.AZ_SUBSCRIPTION_ID }}"
           comment-delete: "true"
           comment-title: "DNS"
           skip-conftest: true
