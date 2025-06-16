@@ -9,6 +9,7 @@ on:
 permissions:
   id-token: write # Required for OIDC token exchange
   contents: read
+  pull-requests: write # Required for PR Update
 
 concurrency:
   group: terraform-deployment
@@ -40,7 +41,10 @@ jobs:
       - name: Install Terraform
         uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
 
-      - name: Terraform plan
+      - name: Install Terraform Summarize
+        - uses: kishaningithub/setup-tf-summarize@v1
+
+      - name: Generate Plan and Summary
         uses: cds-snc/terraform-plan@e710cb1446e5dfe69a0182603fb06b5282d7eb07 # v3.4.3
         with:
           terraform-init: |
