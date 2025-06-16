@@ -49,6 +49,14 @@ jobs:
             -backend-config="container_name=${{ secrets.TF_BACKEND_CONTAINER }}"
             -backend-config="key=${{ secrets.TF_BACKEND_STATE }}"
             -backend-config="subscription_id=${{ secrets.AZ_SUBSCRIPTION_ID }}"
+          terraform-plan: |
+            -var="azure_client_id=${{ secrets.AZ_APPLICATION_ID }}"
+            -var="azure_tenant_id=${{ secrets.AZ_TENANT_ID }}"
+            -var="azure_subscription_id=${{ secrets.AZ_SUBSCRIPTION_ID }}"
+            -var="resource_group_name=${{ secrets.TF_DNS_RESOURCE_GROUP }}"
+            -var="storage_account_name=${{ secrets.TF_BACKEND_STORAGE_ACCOUNT }}"
+            -var="container_name=${{ secrets.TF_BACKEND_CONTAINER }}"
+            -var="backend_state_name=${{ secrets.TF_BACKEND_STATE }}"
           comment-delete: "true"
           comment-title: "DNS"
           skip-conftest: true
