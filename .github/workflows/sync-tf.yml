@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build_and_plan:
+  refresh_plan:
     runs-on:
       group: "Prod FSDH Hosted Runners"
       labels: [self-hosted, linux, dns]
