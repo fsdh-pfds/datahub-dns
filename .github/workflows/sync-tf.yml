@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  refresh_plan:
+  sync-state:
     runs-on:
       group: "Prod FSDH Hosted Runners"
       labels: [self-hosted, linux, dns]
@@ -52,7 +52,7 @@ jobs:
 
       - name: Refresh-only Plan
         run: |
-          terraform plan -refresh-only -input=false -lock=false \
+          terraform plan -refresh-only -input=false \
             -var="azure_client_id=${{ secrets.AZ_APPLICATION_ID }}" \
             -var="azure_tenant_id=${{ secrets.AZ_TENANT_ID }}" \
             -var="azure_subscription_id=${{ secrets.AZ_SUBSCRIPTION_ID }}" \
