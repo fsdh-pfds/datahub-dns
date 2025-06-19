@@ -62,7 +62,6 @@ jobs:
             -var="container_name=${{ secrets.TF_BACKEND_CONTAINER }}"
             -var="backend_state_name=${{ secrets.TF_BACKEND_STATE }}"
           comment-delete: "true"
-          comment-title: "DNS"
+          comment-title: "Summary of Changes (Terraform Plan)"
           skip-conftest: true
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-          
