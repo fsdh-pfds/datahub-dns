@@ -22,7 +22,7 @@ jobs:
     runs-on:
       group: "Prod FSDH Hosted Runners"
       labels: [self-hosted, linux, dns]
-    environment: dns-tfservice-planner
+    environment: dns-tfservice-planner[PR Validation]
 
     steps:
       - name: Login to Azure (OIDC)
