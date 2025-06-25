@@ -92,8 +92,8 @@ jobs:
                 | { 
                     address: .address,
                     actions: .change.actions,
-                    before: (.change.before | del(.tags)),
-                    after:  (.change.after  | del(.tags))
+                    before: (.change.before | if . and has("tags") then del(.tags) else . end),
+                    after:  (.change.after  | if . and has("tags") then del(.tags) else . end)
                   }
               ]'
 
