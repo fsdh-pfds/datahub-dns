@@ -78,6 +78,22 @@ jobs:
           else
             echo "No drift detected"
           fi
+      
+      - name: Display Drift Report
+        id: drift-report
+        run: |
+          terraform show -json tfplan \
+            | jq '[ 
+                .resource_changes[]
+                | select(.change.actions | any(. != "no-op"))
+                | { 
+                    address: .address,
+                    actions: .change.actions,
+                    before: (.change.before | del(.tags)),
+                    after:  (.change.after  | del(.tags))
+                  }
+              ]'
+
 
   alert-and-report:
     name: Alert & SARIF Upload
