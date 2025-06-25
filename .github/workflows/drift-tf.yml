@@ -60,6 +60,7 @@ jobs:
 
       - name: Refresh-only Plan
         id: plan
+        continue-on-error: true
         run: |
           terraform plan -detailed-exitcode -out=tfplan -input=false \
             -var="azure_client_id=${{ secrets.AZ_APPLICATION_ID }}" \
@@ -70,13 +71,13 @@ jobs:
             -var="container_name=${{ secrets.TF_BACKEND_CONTAINER }}" \
             -var="backend_state_name=${{ secrets.TF_BACKEND_STATE }}" \
             > /dev/null 2>&1; exit_code=$?
-          echo "Terraform plan exit code: $exit_code"
+
           echo "exitcode=$exit_code" >> $GITHUB_OUTPUT
 
       - name: Echo drift status
         run: |
           if [ "${{ steps.plan.outputs.exitcode }}" = "2" ]; then
-            echo "✅ Drift detected"
+            echo "Drift detected"
           else
             echo "No drift detected"
           fi
@@ -108,6 +109,25 @@ jobs:
         uses: dacbd/create-issue-action@v2.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          title: "Terraform Drift Detected in DNS Environment"
-          body: "check action runner #123"
-          labels: terraform,drift
+          title: "🚨 Terraform Drift Detected in DNS Environment"
+          body: |
+            ## Drift Detection Alert
+            
+            **Environment:** DNS Environment
+            **Detection Time:** ${{ github.run_id }}
+            **Workflow:** ${{ github.workflow }}
+            
+            ### Details
+            - Terraform plan exit code: ${{ needs.detect-drift.outputs.plan-exitcode }}
+            - Action Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            
+            ### Next Steps
+            1. Review the terraform plan output in the GitHub Action logs
+            2. Download the plan artifact for detailed analysis
+            3. Investigate what caused the infrastructure drift
+            4. Apply corrective measures
+            
+            ### Resources
+            - [View Action Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            - [Download Plan Artifact](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          labels: terraform,drift,alert
