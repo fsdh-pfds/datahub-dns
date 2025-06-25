@@ -68,7 +68,7 @@ jobs:
             -var="storage_account_name=${{ secrets.TF_BACKEND_STORAGE_ACCOUNT }}" \
             -var="container_name=${{ secrets.TF_BACKEND_CONTAINER }}" \
             -var="backend_state_name=${{ secrets.TF_BACKEND_STATE }}" \
-            > /dev/null 2>&1
+            > /dev/null 2>&1 || rc=$?
           rc=$?
           echo "exitcode=$rc" >> $GITHUB_OUTPUT
 
