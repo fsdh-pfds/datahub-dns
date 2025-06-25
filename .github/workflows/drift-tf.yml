@@ -150,7 +150,7 @@ jobs:
                 locations: [
                   {
                     physicalLocation: {
-                      artifactLocation: { uri: $run },
+                      artifactLocation: { uri: "." },
                       region: { startLine: 1 }
                     }
                   }
