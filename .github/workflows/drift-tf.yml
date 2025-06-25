@@ -69,7 +69,8 @@ jobs:
             -var="container_name=${{ secrets.TF_BACKEND_CONTAINER }}" \
             -var="backend_state_name=${{ secrets.TF_BACKEND_STATE }}" \
             > /dev/null 2>&1
-          echo "exitcode=$?" >> $GITHUB_OUTPUT
+          rc=$?
+          echo "exitcode=$rc" >> $GITHUB_OUTPUT
 
       - name: Echo drift status
         run: |
@@ -78,7 +79,7 @@ jobs:
           else
             echo "No drift detected"
           fi
-          
+
   alert-and-report:
     name: Alert & SARIF Upload
     needs: detect-drift
