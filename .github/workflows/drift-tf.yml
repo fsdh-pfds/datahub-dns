@@ -139,7 +139,7 @@ jobs:
         run: |
           # build the URL to this run
           RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          
+
           jq --arg run "$RUN_URL" \
             '.runs[0].results[0].message.text = "Terraform drift detected – see workflow run: \($run)"' \
             .github/sarif-templates/drift-template.sarif \
@@ -149,3 +149,4 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: drift-report.sarif
+          category: tf-drift-action
