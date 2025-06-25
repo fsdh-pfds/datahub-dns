@@ -20,10 +20,13 @@ concurrency:
 
 jobs:
   detect-drift:
+    name: Detect Drift
     runs-on:
       group: "Prod FSDH Hosted Runners"
       labels: [self-hosted, linux, dns]
     environment: dns-tfservice-worker
+    outputs:
+      drift-exitcode: ${{ steps.plan.outputs.exitcode }}
 
     steps:
       - name: Login to Azure (OIDC)
@@ -66,42 +69,17 @@ jobs:
             -var="backend_state_name=${{ secrets.TF_BACKEND_STATE }}"
           echo "exitcode=$?" >> $GITHUB_OUTPUT
           
-      - name: Generate drift details
-        if: steps.plan.outputs.exitcode == '2'
-        run: terraform show -no-color tfplan > drift.txt
-
-      - name: Upload drift details artifact
-        if: steps.plan.outputs.exitcode == '2'
-        uses: actions/upload-artifact@v4
-        with:
-          name: drift-details
-          path: drift.txt
   alert-and-report:
     name: Alert & SARIF Upload
     needs: detect-drift
     runs-on: ubuntu-latest
     if: needs.detect-drift.outputs.drift-exitcode == '2'
     steps:
-      - name: Download drift details
-        uses: actions/download-artifact@v4
-        with:
-          name: drift-details
-
-      - name: Prepare issue body
-        id: driftbody
-        run: |
-          echo "drift_body<<EOF" >> $GITHUB_OUTPUT
-          echo "@datahub-dns-write Terraform plan detected drift when refreshing state." >> $GITHUB_OUTPUT
-          echo "" >> $GITHUB_OUTPUT
-          echo "```diff" >> $GITHUB_OUTPUT
-          sed 's/^/    /' drift.txt >> $GITHUB_OUTPUT
-          echo "```" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Issue for Drift
         uses: dacbd/create-issue-action@v2.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "Terraform Drift Detected in DNS Environment"
-          body: ${{ steps.driftbody.outputs.drift_body }}
+          body: "check action runner #123"
           labels: terraform,drift
