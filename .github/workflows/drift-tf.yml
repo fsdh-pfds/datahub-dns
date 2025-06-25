@@ -1,5 +1,5 @@
 ---
-name: Terraform State Refresh
+name: Terraform Drift Detection
 
 on:
   # Runs at 03:00 UTC every day; adjust the cron as needed
