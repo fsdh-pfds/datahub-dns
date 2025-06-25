@@ -57,6 +57,7 @@ jobs:
             -backend-config="subscription_id=${{ secrets.AZ_SUBSCRIPTION_ID }}"
 
       - name: Refresh-only Plan
+        id: plan
         run: |
           set +e
           terraform plan -refresh-only -detailed-exitcode -out=tfplan -input=false \
@@ -66,7 +67,8 @@ jobs:
             -var="resource_group_name=${{ secrets.TF_DNS_RESOURCE_GROUP }}" \
             -var="storage_account_name=${{ secrets.TF_BACKEND_STORAGE_ACCOUNT }}" \
             -var="container_name=${{ secrets.TF_BACKEND_CONTAINER }}" \
-            -var="backend_state_name=${{ secrets.TF_BACKEND_STATE }}"
+            -var="backend_state_name=${{ secrets.TF_BACKEND_STATE }}" \
+            > /dev/null 2>&1
           echo "exitcode=$?" >> $GITHUB_OUTPUT
           
   alert-and-report:
