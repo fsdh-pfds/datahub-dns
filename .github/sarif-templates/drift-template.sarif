@@ -22,11 +22,11 @@
         {
           "ruleId": "TFDrift",
           "level": "warning",
-          "message": { "text": "" },              // ← filled in by jq
+          "message": { "text": "" },
           "locations": [
             {
               "physicalLocation": {
-                "artifactLocation": { "uri": "." }, // point at repo root (or change to a file path)
+                "artifactLocation": { "uri": "." },
                 "region": { "startLine": 1 }
               }
             }
