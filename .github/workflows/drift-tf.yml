@@ -109,39 +109,39 @@ jobs:
         run: |
           FINGERPRINT=$(sha256sum drift.txt | awk '{print $1}')
           cat <<EOF > drift.sarif
-{
-  "version": "2.1.0",
-  "runs": [
-    {
-      "tool": {
-        "driver": {
-          "name": "Terraform Drift Detector",
-          "informationUri": "https://github.com/your-org/terraform-drift-action"
-        }
-      },
-      "results": [
-        {
-          "ruleId": "TF-DRIFT-001",
-          "level": "warning",
-          "message": { "text": "Terraform state drift detected. See drift.txt for full diff." },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "drift.txt"
-                }
+          {
+            "version": "2.1.0",
+            "runs": [
+              {
+                "tool": {
+                  "driver": {
+                    "name": "Terraform Drift Detector",
+                    "informationUri": "https://github.com/your-org/terraform-drift-action"
+                  }
+                },
+                "results": [
+                  {
+                    "ruleId": "TF-DRIFT-001",
+                    "level": "warning",
+                    "message": { "text": "Terraform state drift detected. See drift.txt for full diff." },
+                    "locations": [
+                      {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "drift.txt"
+                          }
+                        }
+                      }
+                    ],
+                    "partialFingerprints": {
+                      "driftHash": "$FINGERPRINT"
+                    }
+                  }
+                ]
               }
-            }
-          ],
-          "partialFingerprints": {
-            "driftHash": "$FINGERPRINT"
+            ]
           }
-        }
-      ]
-    }
-  ]
-}
-EOF
+          EOF
 
       - name: Upload SARIF to GitHub Security Center
         uses: github/codeql-action/upload-sarif@v3
