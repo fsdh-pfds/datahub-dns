@@ -4,4 +4,4 @@
 
 # Terraform root modules and configuration
 
-* @datahub-dns-write
+* @fsdh-pfds/datahub-dns-write
