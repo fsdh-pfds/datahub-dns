@@ -1,0 +1,7 @@
+# CODEOWNERS file
+
+# Define the users or teams responsible for specific paths in this repository
+
+# Terraform root modules and configuration
+
+* @datahub-dns-write
