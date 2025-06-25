@@ -140,23 +140,8 @@ jobs:
           # build the URL to this run
           RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           
-          # merge a single result into your template’s empty results array
           jq --arg run "$RUN_URL" \
-            '.runs[0].results = [
-              {
-                ruleId: "TFDrift",
-                level: "warning",
-                message: { text: "Terraform drift detected – see workflow run: \($run)" },
-                locations: [
-                  {
-                    physicalLocation: {
-                      artifactLocation: { uri: "." },
-                      region: { startLine: 1 }
-                    }
-                  }
-                ]
-              }
-            ]' \
+            '.runs[0].results[0].message.text = "Terraform drift detected – see workflow run: \($run)"' \
             .github/sarif-templates/drift-template.sarif \
           > drift-report.sarif
 
