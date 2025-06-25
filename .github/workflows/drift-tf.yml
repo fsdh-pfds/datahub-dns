@@ -70,6 +70,14 @@ jobs:
             -var="backend_state_name=${{ secrets.TF_BACKEND_STATE }}" \
             > /dev/null 2>&1
           echo "exitcode=$?" >> $GITHUB_OUTPUT
+
+      - name: Echo drift status
+        run: |
+          if [ "${{ steps.plan.outputs.exitcode }}" = "2" ]; then
+            echo "✅ Drift detected"
+          else
+            echo "No drift detected"
+          fi
           
   alert-and-report:
     name: Alert & SARIF Upload
