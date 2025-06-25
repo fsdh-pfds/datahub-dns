@@ -60,7 +60,6 @@ jobs:
 
       - name: Refresh-only Plan
         id: plan
-        continue-on-error: true
         run: |
           set +e
           terraform plan -detailed-exitcode -out=tfplan -input=false \
@@ -100,7 +99,7 @@ jobs:
 
 
   alert-and-report:
-    name: Alert & SARIF Upload
+    name: Alert & Create Report
     needs: detect-drift
     runs-on: ubuntu-latest
     if: needs.detect-drift.outputs.drift-exitcode == '2'
@@ -110,12 +109,11 @@ jobs:
         uses: dacbd/create-issue-action@v2.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          title: "🚨 Terraform Drift Detected in DNS Environment"
+          title: "Terraform Drift Report"
           body: |
             ## Drift Detection Alert
             
             **Environment:** DNS Environment
-            **Detection Time:** ${{ github.run_id }}
             **Workflow:** ${{ github.workflow }}
             
             ### Details
@@ -132,3 +130,34 @@ jobs:
             - [View Action Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
             - [Download Plan Artifact](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
           labels: terraform,drift,alert
+          
+      - name: Generate SARIF report from template
+        id: gen-sarif
+        run: |
+          # build the URL to this run
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          
+          # merge a single result into your template’s empty results array
+          jq --arg run "$RUN_URL" \
+            '.runs[0].results = [
+              {
+                ruleId: "TFDrift",
+                level: "warning",
+                message: { text: "Terraform drift detected – see workflow run: \($run)" },
+                locations: [
+                  {
+                    physicalLocation: {
+                      artifactLocation: { uri: $run },
+                      region: { startLine: 1 }
+                    }
+                  }
+                ]
+              }
+            ]' \
+            .github/sarif-templates/drift-template.sarif \
+          > drift-report.sarif
+
+      - name: Upload SARIF to GitHub Code Scanning
+        uses: github/code-scanning-action/upload-sarif@v2
+        with:
+          sarif_file: drift-report.sarif
