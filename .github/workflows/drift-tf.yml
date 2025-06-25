@@ -58,7 +58,7 @@ jobs:
             -backend-config="key=${{ secrets.TF_BACKEND_STATE }}" \
             -backend-config="subscription_id=${{ secrets.AZ_SUBSCRIPTION_ID }}"
 
-      - name: Refresh-only Plan
+      - name: Terraform Plan(Drift Scan)
         id: plan
         run: |
           set +e
@@ -158,6 +158,6 @@ jobs:
           > drift-report.sarif
 
       - name: Upload SARIF to GitHub Code Scanning
-        uses: github/code-scanning-action/upload-sarif@v2
+        uses: github/code-scanning-action/upload-sarif@v3
         with:
           sarif_file: drift-report.sarif
