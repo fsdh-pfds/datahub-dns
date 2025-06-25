@@ -59,7 +59,6 @@ jobs:
       - name: Refresh-only Plan
         id: plan
         run: |
-          set +e
           terraform plan -refresh-only -detailed-exitcode -out=tfplan -input=false \
             -var="azure_client_id=${{ secrets.AZ_APPLICATION_ID }}" \
             -var="azure_tenant_id=${{ secrets.AZ_TENANT_ID }}" \
@@ -67,10 +66,9 @@ jobs:
             -var="resource_group_name=${{ secrets.TF_DNS_RESOURCE_GROUP }}" \
             -var="storage_account_name=${{ secrets.TF_BACKEND_STORAGE_ACCOUNT }}" \
             -var="container_name=${{ secrets.TF_BACKEND_CONTAINER }}" \
-            -var="backend_state_name=${{ secrets.TF_BACKEND_STATE }}" \
-            > /dev/null 2>&1 || rc=$?
-          rc=$?
-          echo "exitcode=$rc" >> $GITHUB_OUTPUT
+            -var="backend_state_name=${{ secrets.TF_BACKEND_STATE }}" 
+          exit_code=$?
+          echo "exitcode=$exit_code" >> $GITHUB_OUTPUT
 
       - name: Echo drift status
         run: |
