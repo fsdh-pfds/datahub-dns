@@ -10,13 +10,15 @@ on:
 permissions:
   id-token: write # Required for OIDC token exchange
   contents: read
+  security-events: write
+  issues: write  
 
 concurrency:
   group: terraform-deployment
   cancel-in-progress: false
 
 jobs:
-  sync-state:
+  detect-drift:
     runs-on:
       group: "Prod FSDH Hosted Runners"
       labels: [self-hosted, linux, dns]
@@ -73,26 +75,75 @@ jobs:
         with:
           name: drift-details
           path: drift.txt
+  alert-and-report:
+    name: Alert & SARIF Upload
+    needs: detect-drift
+    runs-on: ubuntu-latest
+    if: needs.detect-drift.outputs.drift-exitcode == '2'
+    steps:
+      - name: Download drift details
+        uses: actions/download-artifact@v4
+        with:
+          name: drift-details
 
-      - name: Lookup Terraform code owner
-        if: steps.plan.outputs.exitcode == '2'
-        id: codeowner
+      - name: Prepare issue body
+        id: driftbody
         run: |
-          # Adjust the pattern to match your tf path
-          OWNER=$(grep -E '^modules/|^tf/' CODEOWNERS \
-                  | head -1 \
-                  | awk '{print $NF}' \
-                  | tr -d '@')
-          echo "owner=$OWNER" >> $GITHUB_OUTPUT
+          echo "drift_body<<EOF" >> $GITHUB_OUTPUT
+          echo "@datahub-dns-write Terraform plan detected drift when refreshing state." >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          echo "```diff" >> $GITHUB_OUTPUT
+          sed 's/^/    /' drift.txt >> $GITHUB_OUTPUT
+          echo "```" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Issue for Drift
-        if: steps.plan.outputs.exitcode == '2'
         uses: dacbd/create-issue-action@v2.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "Terraform Drift Detected in DNS Environment"
-          body: |
-            Terraform plan detected drift when refreshing state.
-            See the **drift-details** artifact for the full diff.
+          body: ${{ steps.driftbody.outputs.drift_body }}
           labels: terraform,drift
-          assignees: ${{ steps.codeowner.outputs.owner }}          
+
+      - name: Generate SARIF report with fingerprint
+        run: |
+          FINGERPRINT=$(sha256sum drift.txt | awk '{print $1}')
+          cat <<EOF > drift.sarif
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Terraform Drift Detector",
+          "informationUri": "https://github.com/your-org/terraform-drift-action"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "TF-DRIFT-001",
+          "level": "warning",
+          "message": { "text": "Terraform state drift detected. See drift.txt for full diff." },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "drift.txt"
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "driftHash": "$FINGERPRINT"
+          }
+        }
+      ]
+    }
+  ]
+}
+EOF
+
+      - name: Upload SARIF to GitHub Security Center
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: drift.sarif
