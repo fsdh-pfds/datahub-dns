@@ -69,6 +69,7 @@ jobs:
             -var="backend_state_name=${{ secrets.TF_BACKEND_STATE }}" \
             > /dev/null 2>&1
           exit_code=$?
+          echo "Terraform plan exit code: $exit_code"
           echo "exitcode=$exit_code" >> $GITHUB_OUTPUT
 
       - name: Echo drift status
