@@ -1,33 +1,31 @@
 package tflint
+
 import rego.v1
 
-# Get all Azure resources (since your original rule was Azure-specific)
-azure_resources := terraform.resources("azurerm_*", {}, {"expand_mode": "none"})
+# 1. Grab all your DNS zones (no type‐hint needed if you’re just
+#    inspecting meta-args)
+zones := terraform.resources("azurerm_dns_zone", {}, {"expand_mode":"none"})
 
-# Check if resource is missing lifecycle.ignore_changes = [tags]
-is_missing_lifecycle_ignore_tags(resource) if {
-    # lifecycle block doesn't exist
-    not "lifecycle" in object.keys(resource)
+# 2. Helper: did the resource define a lifecycle.ignore_changes = ["tags"]?
+has_ignore_tags(config) {
+  # There must be a lifecycle block…
+  lifecycle := config.lifecycle
+
+  # …and that block’s .value.ignore_changes must include the literal "tags"
+  lifecycle.value.ignore_changes.value[_] == "tags"
 }
 
-is_missing_lifecycle_ignore_tags(resource) if {
-    # lifecycle exists but ignore_changes doesn't
-    "lifecycle" in object.keys(resource)
-    not "ignore_changes" in object.keys(resource.lifecycle)
-}
+# 3. If a zone is missing that exact setting, emit an issue
+deny_missing_ignore_tags contains issue {
+  zone := zones[i]
 
-is_missing_lifecycle_ignore_tags(resource) if {
-    # lifecycle and ignore_changes exist but "tags" is not in the list
-    "lifecycle" in object.keys(resource)
-    "ignore_changes" in object.keys(resource.lifecycle)
-    not "tags" in resource.lifecycle.ignore_changes
-}
+  # Fail when:
+  #  - no lifecycle block, OR
+  #  - lifecycle.ignore_changes doesn’t include "tags"
+  not has_ignore_tags(zone.config)
 
-# Rule for missing lifecycle ignore tags
-deny_missing_lifecycle_ignore_tags contains issue if {
-    is_missing_lifecycle_ignore_tags(azure_resources[i])
-    issue := tflint.issue(
-        sprintf("Resource %s must have lifecycle block with ignore_changes = [tags]", [azure_resources[i].type]),
-        azure_resources[i].decl_range
-    )
+  issue := tflint.issue(
+    "azurerm_dns_zone must set lifecycle.ignore_changes = [\"tags\"]",
+    zone.decl_range
+  )
 }
