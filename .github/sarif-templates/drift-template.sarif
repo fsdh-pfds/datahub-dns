@@ -26,7 +26,7 @@
           "locations": [
             {
               "physicalLocation": {
-                "artifactLocation": { "uri": "main.tf" },
+                "artifactLocation": { "uri": "." },
                 "region": { "startLine": 1 }
               }
             }
