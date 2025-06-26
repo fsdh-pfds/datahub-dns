@@ -10,7 +10,7 @@ resource "azurerm_dns_a_record" "sds_canada_ca_a_record" {
   zone_name           = azurerm_dns_zone.sds_canada_ca_zone.name
   resource_group_name = var.resource_group_name
   ttl                 = 3600
-  records             = [
+  records = [
     "185.199.108.153",
     "185.199.109.153",
     "185.199.110.153",
