@@ -4,15 +4,11 @@ name: Terraform Drift Detection
 on:
   # Runs at 03:00 UTC every day; adjust the cron as needed
   schedule:
-    - cron: '0 3 * * *'
+    - cron: "0 3 * * *"
   workflow_dispatch:
   pull_request:
 
-permissions:
-  id-token: write # Required for OIDC token exchange
-  contents: read
-  security-events: write
-  issues: write  
+permissions: read-all
 
 concurrency:
   group: terraform-deployment
@@ -21,6 +17,9 @@ concurrency:
 jobs:
   detect-drift:
     name: Detect Drift
+    permissions:
+      id-token: write # Required for OIDC token exchange
+      contents: read
     runs-on:
       group: "Prod FSDH Hosted Runners"
       labels: [self-hosted, linux, dns]
@@ -81,7 +80,7 @@ jobs:
           else
             echo "No drift detected"
           fi
-      
+
       - name: Display Drift Report
         id: drift-report
         run: |
@@ -97,23 +96,24 @@ jobs:
                   }
               ]'
 
-
   alert-and-report:
     name: Alert & Create Report
+    permissions:
+      issues: write
+      security-events: write
     needs: detect-drift
     runs-on: ubuntu-latest
     if: needs.detect-drift.outputs.drift-exitcode == '2'
     steps:
-
       - name: Find existing drift issue
         id: find_drift_report
         uses: KingBain/issues-helper@disable-thanks
         with:
           actions: find-issues
           show-thanks: false
-          issue-state: 'open'
-          title-includes: 'Terraform Drift Report'
-          labels: 'terraform,drift,alert'
+          issue-state: "open"
+          title-includes: "Terraform Drift Report"
+          labels: "terraform,drift,alert"
 
       - name: Create drift issue if missing
         if: steps.find_drift_report.outputs.issues == '[]'
@@ -125,20 +125,20 @@ jobs:
           labels: terraform,drift,alert
           body: |
             ## Drift Detection Alert
-            
+
             **Environment:** DNS Environment
             **Workflow:** ${{ github.workflow }}
-            
+
             ### Details
             - Terraform plan exit code: ${{ needs.detect-drift.outputs.drift-exitcode }}
             - Action Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-            
+
             ### Next Steps
             1. Review the terraform plan output in the GitHub Action logs
             2. Download the plan artifact for detailed analysis
             3. Investigate what caused the infrastructure drift
             4. Apply corrective measures
-            
+
             ### Resources
             - [View Action Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
             - [Download Plan Artifact](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
@@ -147,7 +147,7 @@ jobs:
             @fsdh-pfds/datahub-dns-write
 
             ### Report Updates
-          
+
       - name: Update drift issue if present
         if: steps.find_drift_report.outputs.issues != '[]'
         uses: KingBain/issues-helper@disable-thanks
@@ -158,4 +158,20 @@ jobs:
           update-mode: append
           body: |
             Drift still present as of this run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          
+
+      - name: Generate SARIF report from template
+        id: gen-sarif
+        run: |
+          # build the URL to this run
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          jq --arg run "$RUN_URL" \
+            '.runs[0].results[0].message.text = "Terraform drift detected – see workflow run: \($run)"' \
+            .github/sarif-templates/drift-template.sarif \
+          > drift-report.sarif
+
+      - name: Upload SARIF to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: drift-report.sarif
+          category: tf-drift-action
