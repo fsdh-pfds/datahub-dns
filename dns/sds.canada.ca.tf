@@ -34,7 +34,7 @@ resource "azurerm_dns_txt_record" "sds_canada_ca_txt_github_pages_challenge_reco
   record {
     value = "5910da3f935f005ba8fa51eaca6495"
   }
-  
+
   lifecycle {
     ignore_changes = [tags]
   }
