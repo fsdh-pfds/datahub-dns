@@ -110,7 +110,7 @@ jobs:
 
       - name: Find existing drift issue
         id: find_drift_report
-        uses: actions-cool/issues-helper@v3
+        uses: actions-cool/issues-helper@a610082f8ac0cf03e357eb8dd0d5e2ba075e017e # v3
         with:
           actions: find-issues
           issue-state: "open"
@@ -119,7 +119,7 @@ jobs:
 
       - name: Create drift issue if missing
         if: steps.find_drift_report.outputs.issues == '[]'
-        uses: actions-cool/issues-helper@v3
+        uses: actions-cool/issues-helper@a610082f8ac0cf03e357eb8dd0d5e2ba075e017e # v3
         with:
           actions: create-issue
           title: "Terraform Drift Report"
@@ -151,7 +151,7 @@ jobs:
 
       - name: Update drift issue if present
         if: steps.find_drift_report.outputs.issues != '[]'
-        uses: actions-cool/issues-helper@v3
+        uses: actions-cool/issues-helper@a610082f8ac0cf03e357eb8dd0d5e2ba075e017e # v3
         with:
           actions: update-issue
           issue-number: ${{ fromJSON(steps.find_drift_report.outputs.issues)[0].number }}
@@ -171,7 +171,7 @@ jobs:
           > drift-report.sarif
 
       - name: Upload SARIF to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@ce28f5bb42b7a9f2c824e633a3f6ee835bab6858 # v3
         with:
           sarif_file: drift-report.sarif
           category: tf-drift-action
