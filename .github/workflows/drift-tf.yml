@@ -109,7 +109,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Create GitHub Issue for Drift
-        uses: dacbd/create-issue-action@v2.0.0
+        uses: ovsds/create-or-update-unique-issue-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "Terraform Drift Report"
@@ -132,7 +132,10 @@ jobs:
             ### Resources
             - [View Action Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
             - [Download Plan Artifact](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-          labels: terraform,drift,alert
+
+            ### Notified
+            @fsdh-pfds/datahub-dns-write
+
           
       - name: Generate SARIF report from template
         id: gen-sarif
