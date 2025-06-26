@@ -5,7 +5,7 @@ resource "azurerm_dns_zone" "sds_canada_ca_zone" {
   resource_group_name = var.resource_group_name
 
   lifecycle {
-    ignore_changes = [tags]
+    ignore_changes = ["tags"]
   }
 }
 
@@ -22,7 +22,7 @@ resource "azurerm_dns_a_record" "sds_canada_ca_a_record" {
   ]
 
   lifecycle {
-    ignore_changes = [tags]
+    ignore_changes = ["tags"]
   }
 }
 
@@ -36,7 +36,7 @@ resource "azurerm_dns_txt_record" "sds_canada_ca_txt_github_pages_challenge_reco
   }
 
   lifecycle {
-    ignore_changes = [tags]
+    ignore_changes = ["tags"]
   }
 }
 
@@ -48,6 +48,6 @@ resource "azurerm_dns_cname_record" "sds_canada_ca_cname_www" {
   record              = "sds.canada.ca"
 
   lifecycle {
-    ignore_changes = [tags]
+    ignore_changes = ["tags"]
   }
 }
