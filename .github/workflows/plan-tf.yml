@@ -12,8 +12,8 @@ permissions:
   pull-requests: write # Required for PR Update
 
 concurrency:
-  group: terraform-deployment
-  cancel-in-progress: false
+  group: dns-tfservice-planner-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build_and_plan:
