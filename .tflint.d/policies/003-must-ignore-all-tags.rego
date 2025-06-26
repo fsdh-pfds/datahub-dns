@@ -3,7 +3,7 @@ import rego.v1
 
 # Deny resources that don't have lifecycle.ignore_changes containing "tags"
 deny_missing_lifecycle_ignore_tags contains issue if {
-    all := terraform.resources("*", {}, {"expand_mode": "all"})
+    all := terraform.resources("*", {}, {})
     resources := all[_]
     
     # Check all conditions that would make this resource non-compliant
