@@ -24,7 +24,9 @@ resource "azurerm_dns_txt_record" "sds_canada_ca_txt_github_pages_challenge_reco
   resource_group_name = var.resource_group_name
   ttl                 = 3600
 
-  records = ["5910da3f935f005ba8fa51eaca6495"]
+  record {
+    value = "5910da3f935f005ba8fa51eaca6495"
+  }
 }
 
 resource "azurerm_dns_cname_record" "sds_canada_ca_cname_www" {
