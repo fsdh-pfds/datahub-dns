@@ -110,7 +110,7 @@ jobs:
         uses: KingBain/issues-helper@disable-thanks
         with:
           actions: find-issues
-          show-thanks: true
+          show-thanks: false
           issue-state: 'open'
           title-includes: 'Terraform Drift Report'
           labels: 'terraform,drift,alert'
