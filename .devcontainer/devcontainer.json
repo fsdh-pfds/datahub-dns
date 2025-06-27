@@ -1,16 +1,10 @@
 {
-  "name": "Azure Developer CLI",
+  "name": "Terraform CLI",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:22-bullseye",
   "features": {
-    "ghcr.io/devcontainers/features/azure-cli:1": {
-      "version": "latest",
-      "bicepVersion": "latest"
-    },
-    "ghcr.io/devcontainers/features/terraform:1": {
-      "version": "latest",
-      "tflint": "latest",
-      "terragrunt": "latest"
-    }
+    "ghcr.io/devcontainers/features/azure-cli:1": {},
+    "ghcr.io/devcontainers/features/terraform:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
   },
   "containerEnv": {
     "TFLINT_OPA_POLICY_DIR": "${localWorkspaceFolder}/.tflint.d/policies",
