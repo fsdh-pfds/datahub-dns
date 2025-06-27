@@ -21,9 +21,6 @@ resource "azurerm_dns_a_record" "sds_canada_ca_a_record" {
     "185.199.111.153"
   ]
 
-  lifecycle {
-    ignore_changes = ["tags"]
-  }
 }
 
 resource "azurerm_dns_txt_record" "sds_canada_ca_txt_github_pages_challenge_record" {
