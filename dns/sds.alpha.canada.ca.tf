@@ -4,6 +4,6 @@ resource "azurerm_dns_zone" "sds_alpha_canada_ca_zone" {
   resource_group_name = var.resource_group_name
 
   lifecycle {
-    ignore_changes = ["tags"]
+    ignore_changes = [self.tags]
   }
 }
