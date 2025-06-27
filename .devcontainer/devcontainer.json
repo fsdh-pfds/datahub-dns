@@ -1,5 +1,5 @@
 {
-  "name": "Azure Developer CLI",
+  "name": "Terraform CLI",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:22-bullseye",
   "features": {
     "ghcr.io/devcontainers/features/azure-cli:1": {
