@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - "**/*.tf"
+      - ".tflint.hcl"
+      - ".tflint.d/policies/**"
 
 permissions: read-all
 
