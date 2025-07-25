@@ -108,7 +108,7 @@ jobs:
 
       - name: Find existing drift issue
         id: find_drift_report
-        uses: actions-cool/issues-helper@a610082f8ac0cf03e357eb8dd0d5e2ba075e017e # v3
+        uses: actions-cool/issues-helper@50068f49b7b2b3857270ead65e2d02e4459b022c # v3
         with:
           actions: find-issues
           issue-state: "open"
@@ -117,7 +117,7 @@ jobs:
 
       - name: Create drift issue if missing
         if: steps.find_drift_report.outputs.issues == '[]'
-        uses: actions-cool/issues-helper@a610082f8ac0cf03e357eb8dd0d5e2ba075e017e # v3
+        uses: actions-cool/issues-helper@50068f49b7b2b3857270ead65e2d02e4459b022c # v3
         with:
           actions: create-issue
           title: "Terraform Drift Report"
@@ -149,7 +149,7 @@ jobs:
 
       - name: Update drift issue if present
         if: steps.find_drift_report.outputs.issues != '[]'
-        uses: actions-cool/issues-helper@a610082f8ac0cf03e357eb8dd0d5e2ba075e017e # v3
+        uses: actions-cool/issues-helper@50068f49b7b2b3857270ead65e2d02e4459b022c # v3
         with:
           actions: update-issue
           issue-number: ${{ fromJSON(steps.find_drift_report.outputs.issues)[0].number }}
