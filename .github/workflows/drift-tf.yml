@@ -113,6 +113,7 @@ jobs:
           actions: find-issues
           issue-state: "open"
           create-issue-if-not-exist: "true"
+          show-thanks: "false"
           title-includes: "Terraform Drift Report"
           labels: "terraform,drift,alert"
           body-includes: |
@@ -144,9 +145,10 @@ jobs:
         if: steps.find_drift_report.outputs.issues != '[]'
         uses: actions-cool/issues-helper@a610082f8ac0cf03e357eb8dd0d5e2ba075e017e # v3
         with:
-          actions: update-issue
-          issue-number: ${{ fromJSON(steps.find_drift_report.outputs.issues)[0].number }}
-          update-mode: append
+          actions: "update-issue"
+          show-thanks: "false"
+          issue-number: "${{ fromJSON(steps.find_drift_report.outputs.issues)[0].number }}""
+          update-mode: "append"
           body: |
             Drift still present as of this run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
