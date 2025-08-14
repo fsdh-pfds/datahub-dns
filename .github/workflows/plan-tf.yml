@@ -2,10 +2,9 @@
 name: Terraform Plan
 
 on:
-  workflow_run:
-    workflows: ["Terraform Validation Checks"]
-    types:
-      - completed
+  pull_request:
+    paths:
+      - "**/*.tf"
 
 permissions:
   id-token: write # Required for OIDC token exchange
@@ -18,7 +17,6 @@ concurrency:
 
 jobs:
   build_and_plan:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on:
       group: "Prod FSDH Hosted Runners"
       labels: [self-hosted, linux, dns]
