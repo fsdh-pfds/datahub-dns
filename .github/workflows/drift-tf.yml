@@ -108,15 +108,23 @@ jobs:
 
       - name: Find existing drift issue
         id: find_drift_report
-        uses: actions-cool/issues-helper@a610082f8ac0cf03e357eb8dd0d5e2ba075e017e # v3
+        uses: actions-cool/issues-helper@v3.6.2
         with:
           actions: find-issues
-          issue-state: "open"
-          create-issue-if-not-exist: "true"
           show-thanks: "false"
+          issue-state: "open"
           title-includes: "Terraform Drift Report"
           labels: "terraform,drift,alert"
-          body-includes: |
+
+      - name: Create drift issue if missing
+        if: steps.find_drift_report.outputs.issues == '[]'
+        uses: actions-cool/issues-helper@v3.6.2
+        with:
+          actions: create-issue
+          show-thanks: "false"
+          title: "Terraform Drift Report"
+          labels: terraform,drift,alert
+          body: |
             ## Drift Detection Alert
 
             **Environment:** DNS Environment
@@ -143,12 +151,12 @@ jobs:
 
       - name: Update drift issue if present
         if: steps.find_drift_report.outputs.issues != '[]'
-        uses: actions-cool/issues-helper@a610082f8ac0cf03e357eb8dd0d5e2ba075e017e # v3
+        uses: actions-cool/issues-helper@v3.6.2
         with:
-          actions: "update-issue"
+          actions: update-issue
           show-thanks: "false"
-          issue-number: "${{ fromJSON(steps.find_drift_report.outputs.issues)[0].number }}""
-          update-mode: "append"
+          issue-number: ${{ fromJSON(steps.find_drift_report.outputs.issues)[0].number }}
+          update-mode: append
           body: |
             Drift still present as of this run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
