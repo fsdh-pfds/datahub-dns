@@ -5,6 +5,7 @@ on:
   # Runs at 03:00 UTC every day; adjust the cron as needed
   schedule:
     - cron: "0 3 * * *"
+  pull_request:
 
 permissions: read-all
 
@@ -112,17 +113,10 @@ jobs:
         with:
           actions: find-issues
           issue-state: "open"
+          create-issue-if-not-exist: "true"
           title-includes: "Terraform Drift Report"
           labels: "terraform,drift,alert"
-
-      - name: Create drift issue if missing
-        if: steps.find_drift_report.outputs.issues == '[]'
-        uses: actions-cool/issues-helper@a610082f8ac0cf03e357eb8dd0d5e2ba075e017e # v3
-        with:
-          actions: create-issue
-          title: "Terraform Drift Report"
-          labels: terraform,drift,alert
-          body: |
+          body-includes: |
             ## Drift Detection Alert
 
             **Environment:** DNS Environment
