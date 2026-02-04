@@ -45,7 +45,7 @@ jobs:
         uses: kishaningithub/setup-tf-summarize@b752490b135f74e59d82e656a1dab7f11a937f84 # v2
 
       - name: Generate Plan and Summary
-        uses: cds-snc/terraform-plan@39b0058bcf977fbd8b067b84d5a9f6165e356c32 # v3.7.0
+        uses: cds-snc/terraform-plan@7e4f9169732f9503a909006409d9b1de5d21e208 # v4.1.0
         with:
           terraform-init: |
             -lock=false
