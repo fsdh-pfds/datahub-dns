@@ -108,7 +108,7 @@ jobs:
 
       - name: Find existing drift issue
         id: find_drift_report
-        uses: actions-cool/issues-helper@e2ff99831a4f13625d35064e2b3dfe65c07a0396 # v3.7.5
+        uses: actions-cool/issues-helper@1c9e803c80cc7fed000022d4c94f4b5bc2e90062 # v3.8.0
         with:
           actions: find-issues
           show-thanks: "false"
@@ -118,7 +118,7 @@ jobs:
 
       - name: Create drift issue if missing
         if: steps.find_drift_report.outputs.issues == '[]'
-        uses: actions-cool/issues-helper@e2ff99831a4f13625d35064e2b3dfe65c07a0396 # v3.7.5
+        uses: actions-cool/issues-helper@1c9e803c80cc7fed000022d4c94f4b5bc2e90062 # v3.8.0
         with:
           actions: create-issue
           show-thanks: "false"
@@ -151,7 +151,7 @@ jobs:
 
       - name: Update drift issue if present
         if: steps.find_drift_report.outputs.issues != '[]'
-        uses: actions-cool/issues-helper@e2ff99831a4f13625d35064e2b3dfe65c07a0396 # v3.7.5
+        uses: actions-cool/issues-helper@1c9e803c80cc7fed000022d4c94f4b5bc2e90062 # v3.8.0
         with:
           actions: update-issue
           show-thanks: "false"
